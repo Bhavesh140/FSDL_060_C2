@@ -21,3 +21,21 @@ body {
     border-radius: 10px;
     margin: 10px;
 }
+body {
+    padding-top: 80px;
+}
+.hero {
+    height: 100vh;
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)),
+                url('https://images.unsplash.com/photo-1518770660439-4636190af475');
+    background-size: cover;
+    background-position: center;
+}
+.card {
+    transition: 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0px 10px 20px rgba(0,0,0,0.3);
+}
