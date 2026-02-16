@@ -1,51 +1,64 @@
-document.getElementById("registrationForm").addEventListener("submit", function(e) {
+document.getElementById("registrationForm").addEventListener("submit", function(e){
 
-    e.preventDefault();
+e.preventDefault();
 
-    let isValid = true;
+let name = document.getElementById("name").value.trim();
+let email = document.getElementById("email").value.trim();
+let phone = document.getElementById("phone").value.trim();
+let password = document.getElementById("password").value;
+let confirmPassword = document.getElementById("confirmPassword").value;
 
-    let name = document.getElementById("name").value.trim();
-    let email = document.getElementById("email").value.trim();
-    let phone = document.getElementById("phone").value.trim();
-    let password = document.getElementById("password").value;
-    let confirmPassword = document.getElementById("confirmPassword").value;
+let valid = true;
 
-    document.getElementById("nameError").innerText = "";
-    document.getElementById("emailError").innerText = "";
-    document.getElementById("phoneError").innerText = "";
-    document.getElementById("passwordError").innerText = "";
-    document.getElementById("confirmPasswordError").innerText = "";
+// Name
+if(name === ""){
+document.getElementById("nameError").innerHTML = "Name required";
+valid = false;
+}else{
+document.getElementById("nameError").innerHTML = "";
+}
 
-    if (name === "") {
-        document.getElementById("nameError").innerText = "Name is required.";
-        isValid = false;
-    }
+// Email
+let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+if(!email.match(emailPattern)){
+document.getElementById("emailError").innerHTML = "Invalid Email";
+valid = false;
+}else{
+document.getElementById("emailError").innerHTML = "";
+}
 
-    let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-    if (!email.match(emailPattern)) {
-        document.getElementById("emailError").innerText = "Enter valid email.";
-        isValid = false;
-    }
+// Phone
+if(!phone.match(/^[0-9]{10}$/)){
+document.getElementById("phoneError").innerHTML = "Phone must be 10 digits";
+valid = false;
+}else{
+document.getElementById("phoneError").innerHTML = "";
+}
 
-    let phonePattern = /^[0-9]{10}$/;
-    if (!phone.match(phonePattern)) {
-        document.getElementById("phoneError").innerText = "Phone must be 10 digits.";
-        isValid = false;
-    }
+// Password
+let passPattern = /^(?=.*[A-Z])(?=.*[0-9])(?=.*[&$#@]).{7,}$/;
+if(!password.match(passPattern)){
+document.getElementById("passwordError").innerHTML = 
+"Min 7 chars, 1 capital, 1 digit, 1 special (&,$,#,@)";
+valid = false;
+}else{
+document.getElementById("passwordError").innerHTML = "";
+}
 
-    if (password.length < 6) {
-        document.getElementById("passwordError").innerText = "Password must be at least 6 characters.";
-        isValid = false;
-    }
+// Confirm Password
+if(password !== confirmPassword){
+document.getElementById("confirmPasswordError").innerHTML = "Passwords do not match";
+valid = false;
+}else{
+document.getElementById("confirmPasswordError").innerHTML = "";
+}
 
-    if (password !== confirmPassword) {
-        document.getElementById("confirmPasswordError").innerText = "Passwords do not match.";
-        isValid = false;
-    }
+if(valid){
+alert("Registration Successful 🎉");
+}
+});
 
-    if (isValid) {
-        alert("Registration Successful!");
-        document.getElementById("registrationForm").reset();
-    }
-
+// jQuery example
+$(document).ready(function(){
+$("footer").css("background","#111");
 });
