@@ -1,140 +1,494 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bhavesh Portfolio</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BHAVESH // ARCHITECT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Syncopate:wght@400;700&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================================================
+           1. CORE CONFIGURATION & RESET
+           ==========================================================================
+        */
+        :root {
+            --bg-void: #030305;
+            --bg-panel: #0a0a0f;
+            --accent-cyan: #00f3ff;
+            --accent-purple: #bc13fe;
+            --accent-gold: #ffd700;
+            --text-primary: #ffffff;
+            --text-secondary: #8b9bb4;
+            --grid-line: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --font-display: 'Syncopate', sans-serif;
+            --font-ui: 'Rajdhani', sans-serif;
+            --font-code: 'JetBrains Mono', monospace;
+            --easing: cubic-bezier(0.19, 1, 0.22, 1);
+        }
 
-<link rel="stylesheet" href="css/style.css">
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        
+        html { scroll-behavior: smooth; }
 
-<style>
-body {
-    font-family: 'Poppins', sans-serif;
-}
+        body {
+            background-color: var(--bg-void);
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            overflow-x: hidden;
+            width: 100vw;
+        }
 
-.hero {
-    height: 100vh;
-    background: linear-gradient(135deg,#0d6efd,#6610f2);
-    color: white;
-}
+        /* ==========================================================================
+           2. CUSTOM CURSOR SYSTEM
+           ==========================================================================
+        */
+        .cursor-dot, .cursor-circle {
+            position: fixed; top: 0; left: 0;
+            transform: translate(-50%, -50%);
+            pointer-events: none; z-index: 9999;
+        }
+        .cursor-dot { width: 6px; height: 6px; background: var(--accent-cyan); border-radius: 50%; }
+        .cursor-circle {
+            width: 40px; height: 40px;
+            border: 1px solid rgba(0, 243, 255, 0.5);
+            border-radius: 50%;
+            transition: width 0.3s, height 0.3s, background 0.3s;
+        }
+        body.hovering .cursor-circle { width: 60px; height: 60px; background: rgba(0, 243, 255, 0.1); border-color: transparent; }
 
-.glass {
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-    border-radius: 15px;
-}
+        /* ==========================================================================
+           3. BACKGROUND & PARTICLES
+           ==========================================================================
+        */
+        #canvas-web {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1; opacity: 0.4;
+        }
+        .vignette {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, var(--bg-void) 100%);
+            pointer-events: none; z-index: 0;
+        }
 
-.error {
-    color: red;
-    font-size: 14px;
-}
-</style>
+        /* ==========================================================================
+           4. NAVIGATION
+           ==========================================================================
+        */
+        .nav-bar {
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 30px 50px;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 100; mix-blend-mode: difference;
+        }
 
+        .logo {
+            font-family: var(--font-display);
+            font-weight: 700; font-size: 1.2rem; letter-spacing: 2px;
+            color: white; text-transform: uppercase;
+        }
+
+        .nav-links { display: flex; gap: 40px; }
+        .nav-link {
+            font-family: var(--font-code); font-size: 0.8rem;
+            color: var(--text-secondary); text-decoration: none;
+            position: relative; transition: 0.3s;
+        }
+        .nav-link:hover { color: var(--accent-cyan); }
+        .nav-link::before {
+            content: '//'; margin-right: 5px; color: var(--accent-purple); opacity: 0; transition: 0.3s;
+        }
+        .nav-link:hover::before { opacity: 1; }
+
+        /* ==========================================================================
+           5. HERO SECTION
+           ==========================================================================
+        */
+        .hero-section {
+            height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: flex-start;
+            padding: 0 10vw; position: relative;
+        }
+
+        .glitch-wrapper { position: relative; margin-bottom: 20px; }
+        
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: 6vw; line-height: 0.9;
+            font-weight: 700; text-transform: uppercase;
+            color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.8);
+            position: relative;
+        }
+        
+        .hero-title span { color: white; -webkit-text-stroke: 0; }
+
+        .hero-subtitle {
+            font-family: var(--font-code);
+            font-size: 1.1rem; color: var(--accent-cyan);
+            margin-bottom: 50px; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .hero-subtitle::before { content: ''; width: 30px; height: 1px; background: var(--accent-cyan); }
+
+        /* The Mega Button */
+        .cyber-btn {
+            position: relative;
+            padding: 20px 40px;
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            font-family: var(--font-display);
+            font-size: 0.9rem; letter-spacing: 2px;
+            text-decoration: none;
+            overflow: hidden;
+            transition: 0.4s;
+            clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+        }
+
+        .cyber-btn:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-void);
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
+        }
+
+        .btn-glitch {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: white; opacity: 0; pointer-events: none;
+            z-index: 1;
+        }
+        .cyber-btn:hover .btn-glitch { animation: flash 0.1s steps(2, start) infinite; }
+
+        @keyframes flash { 0% { opacity: 0.2; } 100% { opacity: 0; } }
+
+        /* ==========================================================================
+           6. SKILLS MATRIX SECTION
+           ==========================================================================
+        */
+        .section-container {
+            padding: 100px 10vw;
+            border-top: 1px solid var(--glass-border);
+            position: relative;
+        }
+
+        .section-header {
+            font-family: var(--font-display);
+            font-size: 2.5rem; margin-bottom: 60px;
+            color: white; display: flex; align-items: center; gap: 20px;
+        }
+        .section-header span { color: var(--accent-purple); font-size: 1rem; font-family: var(--font-code); }
+
+        .skills-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .skill-card {
+            background: var(--bg-panel);
+            border: 1px solid var(--glass-border);
+            padding: 30px;
+            position: relative; transition: 0.3s;
+            overflow: hidden;
+        }
+
+        .skill-card:hover { transform: translateY(-5px); border-color: var(--accent-purple); }
+
+        .skill-icon { font-size: 2rem; color: var(--accent-cyan); margin-bottom: 20px; }
+        .skill-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 10px; }
+        .skill-desc { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; }
+
+        .progress-line {
+            width: 100%; height: 2px; background: #222; margin-top: 20px; position: relative;
+        }
+        .progress-fill {
+            height: 100%; background: var(--accent-purple);
+            width: 0%; transition: width 1.5s var(--easing);
+        }
+
+        /* ==========================================================================
+           7. PROJECT GALLERY (3D TILT)
+           ==========================================================================
+        */
+        .projects-grid {
+            display: grid; grid-template-columns: 1fr; gap: 100px;
+        }
+
+        .project-item {
+            display: grid; grid-template-columns: 1.5fr 1fr; gap: 50px;
+            align-items: center;
+        }
+
+        .project-visual {
+            height: 400px;
+            background: #111;
+            border: 1px solid var(--glass-border);
+            position: relative; overflow: hidden;
+            border-radius: 4px;
+            perspective: 1000px;
+        }
+
+        .project-img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.5s; opacity: 0.6;
+        }
+        .project-visual:hover .project-img { transform: scale(1.1); opacity: 1; }
+
+        .project-info h3 { font-family: var(--font-display); font-size: 2rem; margin-bottom: 20px; }
+        .project-info p { color: var(--text-secondary); margin-bottom: 30px; line-height: 1.6; }
+
+        .tech-stack { display: flex; gap: 15px; margin-bottom: 30px; }
+        .tech-tag {
+            font-family: var(--font-code); font-size: 0.8rem;
+            padding: 5px 10px; border: 1px solid var(--glass-border);
+            color: var(--accent-cyan);
+        }
+
+        /* ==========================================================================
+           8. FOOTER
+           ==========================================================================
+        */
+        footer {
+            padding: 80px 10vw;
+            border-top: 1px solid var(--glass-border);
+            background: #020203;
+            display: flex; justify-content: space-between; align-items: flex-end;
+        }
+
+        .footer-cta h2 { font-family: var(--font-display); font-size: 3rem; margin-bottom: 20px; }
+        .footer-info { text-align: right; color: var(--text-secondary); font-family: var(--font-code); }
+
+        @media (max-width: 900px) {
+            .hero-title { font-size: 10vw; }
+            .project-item { grid-template-columns: 1fr; }
+            .nav-bar { padding: 20px; }
+            .nav-links { display: none; }
+        }
+    </style>
 </head>
 <body>
 
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-<div class="container">
-<a class="navbar-brand" href="#">Bhavesh</a>
-<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav">
-<span class="navbar-toggler-icon"></span>
-</button>
-<div class="collapse navbar-collapse" id="nav">
-<ul class="navbar-nav ms-auto">
-<li class="nav-item"><a class="nav-link" href="#about">About</a></li>
-<li class="nav-item"><a class="nav-link" href="#projects">Projects</a></li>
-<li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
-</ul>
-</div>
-</div>
-</nav>
+    <div class="cursor-dot" id="dot"></div>
+    <div class="cursor-circle" id="circle"></div>
 
-<!-- Hero -->
-<section class="hero d-flex align-items-center text-center">
-<div class="container">
-<h1 class="display-3 fw-bold">Hi, I'm Bhavesh</h1>
-<p class="lead">Computer Science Engineering Student</p>
-<button class="btn btn-light mt-4" data-bs-toggle="modal" data-bs-target="#registerModal">
-Register Now
-</button>
-</div>
-</section>
+    <div class="vignette"></div>
+    <canvas id="canvas-web"></canvas>
 
-<!-- About -->
-<section id="about" class="container py-5">
-<h2 class="text-center">About Me</h2>
-<p class="text-center">Passionate about Web Development & AI</p>
-</section>
+    <nav class="nav-bar">
+        <div class="logo">BHAVESH<span style="color:var(--accent-cyan)">.DEV</span></div>
+        <div class="nav-links">
+            <a href="#about" class="nav-link" onmouseenter="hoverBtn()" onmouseleave="leaveBtn()">ABOUT</a>
+            <a href="#skills" class="nav-link" onmouseenter="hoverBtn()" onmouseleave="leaveBtn()">SYSTEMS</a>
+            <a href="#work" class="nav-link" onmouseenter="hoverBtn()" onmouseleave="leaveBtn()">PROJECTS</a>
+        </div>
+    </nav>
 
-<!-- Projects -->
-<section id="projects" class="container py-5">
-<h2 class="text-center">Projects</h2>
-<div class="row mt-4">
-<div class="col-md-6">
-<img src="https://source.unsplash.com/500x300/?technology" class="img-fluid rounded">
-<p class="mt-2">Hotel Management System</p>
-</div>
-<div class="col-md-6">
-<img src="https://source.unsplash.com/500x300/?ai" class="img-fluid rounded">
-<p class="mt-2">Smart Classroom Monitoring</p>
-</div>
-</div>
-</section>
+    <section class="hero-section">
+        <div class="glitch-wrapper">
+            <h1 class="hero-title">
+                CREATIVE<br><span>DEVELOPER</span>
+            </h1>
+        </div>
+        <div class="hero-subtitle">
+            <i class="fas fa-terminal"></i> INITIALIZING SYSTEM V.2.0.4
+        </div>
+        
+        <a href="student-registration.html" class="cyber-btn" onmouseenter="hoverBtn()" onmouseleave="leaveBtn()">
+            <div class="btn-glitch"></div>
+            ACCESS STUDENT PORTAL
+        </a>
+    </section>
 
-<!-- Modal Registration -->
-<div class="modal fade" id="registerModal">
-<div class="modal-dialog modal-dialog-centered">
-<div class="modal-content glass p-4">
+    <section class="section-container" id="skills">
+        <div class="section-header">
+            <span>01 //</span> SYSTEM CAPABILITIES
+        </div>
+        <div class="skills-grid">
+            <div class="skill-card">
+                <i class="fab fa-react skill-icon"></i>
+                <div class="skill-name">Frontend Arch</div>
+                <p class="skill-desc">Building immersive interfaces with React, Vue, and WebGL.</p>
+                <div class="progress-line"><div class="progress-fill" style="width: 90%"></div></div>
+            </div>
+            <div class="skill-card">
+                <i class="fas fa-server skill-icon" style="color: var(--accent-purple)"></i>
+                <div class="skill-name">Backend Ops</div>
+                <p class="skill-desc">Scalable server-side logic using Node.js, Python, and SQL.</p>
+                <div class="progress-line"><div class="progress-fill" style="width: 85%"></div></div>
+            </div>
+            <div class="skill-card">
+                <i class="fas fa-brain skill-icon" style="color: var(--accent-gold)"></i>
+                <div class="skill-name">AI Integration</div>
+                <p class="skill-desc">Leveraging LLMs and Neural Networks for smarter apps.</p>
+                <div class="progress-line"><div class="progress-fill" style="width: 70%"></div></div>
+            </div>
+        </div>
+    </section>
 
-<h4 class="text-center mb-3">Student Registration</h4>
+    <section class="section-container" id="work">
+        <div class="section-header">
+            <span>02 //</span> SELECTED WORKS
+        </div>
+        <div class="projects-grid">
+            <div class="project-item">
+                <div class="project-visual">
+                    <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1000&auto=format&fit=crop" class="project-img" alt="Project 1">
+                </div>
+                <div class="project-info">
+                    <h3>NEURAL DASHBOARD</h3>
+                    <p>A real-time data visualization tool for crypto-currency markets using WebSockets and D3.js. Features predictive algorithms.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">REACT</span>
+                        <span class="tech-tag">D3.JS</span>
+                        <span class="tech-tag">NODE</span>
+                    </div>
+                </div>
+            </div>
+            <div class="project-item">
+                <div class="project-info" style="order: 2"> <h3>CYBER SECURITY AI</h3>
+                    <p>An automated penetration testing tool that uses machine learning to identify network vulnerabilities before they are exploited.</p>
+                    <div class="tech-stack">
+                        <span class="tech-tag">PYTHON</span>
+                        <span class="tech-tag">TENSORFLOW</span>
+                        <span class="tech-tag">AWS</span>
+                    </div>
+                </div>
+                <div class="project-visual" style="order: 1">
+                    <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop" class="project-img" alt="Project 2">
+                </div>
+            </div>
+        </div>
+    </section>
 
-<form id="registrationForm">
+    <footer>
+        <div class="footer-cta">
+            <h2>LET'S BUILD<br>THE FUTURE</h2>
+        </div>
+        <div class="footer-info">
+            <p>BHAVESH DHAKATE</p>
+            <p>EST. 2026</p>
+            <p>PUNE, INDIA</p>
+        </div>
+    </footer>
 
-<div class="mb-3">
-<input type="text" class="form-control" id="name" placeholder="Full Name">
-<div id="nameError" class="error"></div>
-</div>
+    <script>
+        // --- 1. Custom Cursor Logic ---
+        const dot = document.getElementById('dot');
+        const circle = document.getElementById('circle');
 
-<div class="mb-3">
-<input type="email" class="form-control" id="email" placeholder="Email">
-<div id="emailError" class="error"></div>
-</div>
+        let mouseX = 0, mouseY = 0;
+        let circleX = 0, circleY = 0;
 
-<div class="mb-3">
-<input type="text" class="form-control" id="phone" placeholder="Phone Number">
-<div id="phoneError" class="error"></div>
-</div>
+        window.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            // Dot follows instantly
+            dot.style.top = mouseY + 'px';
+            dot.style.left = mouseX + 'px';
+        });
 
-<div class="mb-3">
-<input type="password" class="form-control" id="password" placeholder="Password">
-<div id="passwordError" class="error"></div>
-</div>
+        function animateCursor() {
+            // Smooth lerp for circle
+            circleX += (mouseX - circleX) * 0.15;
+            circleY += (mouseY - circleY) * 0.15;
+            
+            circle.style.top = circleY + 'px';
+            circle.style.left = circleX + 'px';
+            
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
 
-<div class="mb-3">
-<input type="password" class="form-control" id="confirmPassword" placeholder="Confirm Password">
-<div id="confirmPasswordError" class="error"></div>
-</div>
+        function hoverBtn() { document.body.classList.add('hovering'); }
+        function leaveBtn() { document.body.classList.remove('hovering'); }
 
-<button class="btn btn-primary w-100">Register</button>
 
-</form>
+        // --- 2. Neural Network Canvas Background ---
+        const canvas = document.getElementById('canvas-web');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
 
-</div>
-</div>
-</div>
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
 
-<!-- Footer -->
-<footer class="bg-dark text-white text-center p-3">
-© 2025 Bhavesh | All Rights Reserved
-</footer>
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.5;
+                this.vy = (Math.random() - 0.5) * 0.5;
+                this.size = Math.random() * 2;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if(this.x < 0 || this.x > width) this.vx *= -1;
+                if(this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI*2);
+                ctx.fillStyle = 'rgba(0, 243, 255, 0.5)';
+                ctx.fill();
+            }
+        }
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-<script src="js/validation.js"></script>
+        for(let i=0; i<60; i++) particles.push(new Particle());
 
+        function animateParticles() {
+            ctx.clearRect(0,0,width,height);
+            
+            particles.forEach((p, index) => {
+                p.update();
+                p.draw();
+                
+                // Draw Connections
+                for(let j=index; j<particles.length; j++) {
+                    const p2 = particles[j];
+                    const dx = p.x - p2.x;
+                    const dy = p.y - p2.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    
+                    if(dist < 150) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0, 243, 255, ${1 - dist/150})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // --- 3. Scroll Reveal ---
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        // Apply to skills and projects
+        document.querySelectorAll('.skill-card, .project-item').forEach(el => {
+            el.style.opacity = 0;
+            el.style.transform = 'translateY(30px)';
+            el.style.transition = 'all 0.8s cubic-bezier(0.19, 1, 0.22, 1)';
+            observer.observe(el);
+        });
+
+    </script>
 </body>
 </html>
